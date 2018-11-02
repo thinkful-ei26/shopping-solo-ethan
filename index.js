@@ -162,8 +162,8 @@ function handleItemSearch(){
 function handleUpdateItem(){
   $('ul').on('submit', '#js-shopping-item-update', function (event){
     event.preventDefault();
-    const itemIndex = getItemIndexFromElement(event.currentTarget);
-    const updatedTerm = $('.js-shopping-list-update').val();
+    const itemIndex = getItemIndexFromElement($(this));
+    const updatedTerm = $(this).find('.js-shopping-list-update').val();
     deleteListItemFromStore(itemIndex);
     addItemToShoppingList(updatedTerm);
     $('.js-shopping-list-update').val('');

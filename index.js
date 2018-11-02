@@ -160,7 +160,15 @@ function handleItemSearch(){
 }
 
 function handleUpdateItem(){
-  $('#js-shopping-item-update')
+  $('ul').on('submit', '#js-shopping-item-update', function (event){
+    event.preventDefault();
+    const itemIndex = getItemIndexFromElement(event.currentTarget);
+    const updatedTerm = $('.js-shopping-list-update').val();
+    deleteListItemFromStore(itemIndex);
+    addItemToShoppingList(updatedTerm);
+    $('.js-shopping-list-update').val('');
+    renderShoppingList();
+  });
 }
 
 //doc ready function
@@ -171,6 +179,7 @@ function handleShoppingList() {
   handleDeleteItemClicked();
   handleItemToggle();
   handleItemSearch();
+  handleUpdateItem();
 }
 
 $(handleShoppingList);

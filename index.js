@@ -38,12 +38,10 @@ function generateItemElement(item, itemIndex, template){
 function generateShoppingItemsString(shoppingList) {
   console.log('Generating shopping list element');
   const items = shoppingList.map((item, index) => generateItemElement(item, index));
-
-
   return items.join('');
 }
 
-function renderShoppingList(matchedItem) {
+function renderShoppingList(indexArray) {
   //console.log('`renderShoppingList`');
   const shoppingListItemsString = generateShoppingItemsString(STORE.items);
   let filteredItems = [ ...STORE.items];
@@ -51,20 +49,22 @@ function renderShoppingList(matchedItem) {
     let newFilteredItems = filteredItems.filter(item => !item.checked);
     //console.log(newFilteredItems);
     $('.js-shopping-list').html(generateShoppingItemsString(newFilteredItems));
-  } else if (STORE.searchTerm && matchedItem === -1){
+  } else if (STORE.searchTerm && indexArray.length === 0){
     $('.js-shopping-list').html('');
     console.log('no match ran');
-  } 
-  else if (STORE.searchTerm){
+  } else if (STORE.searchTerm){
+    let searchedAndFound = STORE.items.filter(i => STORE.items[i] === indexArray[1]);
+    console.log(searchedAndFound);
+
     let MatchedItemsObject = STORE.items[matchedItem];
     let MatchedItemsObjectIntoArray = [];
+    console.log(MatchedItemsObjectIntoArray);
+    //for (let i )
     MatchedItemsObjectIntoArray.push(MatchedItemsObject);
     console.log(MatchedItemsObject);
     console.log('match ran');
     $('.js-shopping-list').html(generateShoppingItemsString(MatchedItemsObjectIntoArray));
-  } 
-  else {
-    
+  } else {
     $('.js-shopping-list').html(shoppingListItemsString);
   } 
 }
@@ -76,7 +76,6 @@ function addItemToShoppingList (itemName){
 }
 
 function handleNewItemSubmit() {
-  // this function will be responsible for when users add a new shopping list item
   $('#js-shopping-list-form').submit(function(event){
     event.preventDefault();
     const newItemName = $('.js-shopping-list-entry').val();
@@ -101,8 +100,6 @@ function getItemIndexFromElement(item) {
 }
 
 function handleItemCheckClicked() {
-  // this function will be responsible for when users click the "check" button on
-  // a shopping list item.
   $('.js-shopping-list').on('click', '.js-item-toggle', function(event){
     //console.log('`handleItemCheckClicked` ran');
     const itemIndex = getItemIndexFromElement(event.currentTarget);
@@ -118,8 +115,6 @@ function deleteListItemFromStore (itemIndex){
 }
 
 function handleDeleteItemClicked() {
-  // this function will be responsible for when users want to delete a shopping list
-  // item
   $('.js-shopping-list').on('click', '.js-item-delete', function(event){
     //console.log('`handleDeleteItemClicked` ran');
     const itemIndex = getItemIndexFromElement(event.currentTarget);
@@ -146,12 +141,17 @@ function searchForMatch(searchTerm){
   STORE.searchTerm = searchTerm;
   //console.log('search for match ran');
   let nameArray = STORE.items.map(obj => obj.name);
-  let nameResult = STORE.items.map(obj => obj.name).filter(objName => objName.search(searchTerm) !== -1).join();
-  let matchedItem = nameArray.indexOf(nameResult);
-  //console.log(nameResult);
-  console.log(matchedItem);
-  return matchedItem;
-
+  let nameResult = STORE.items.map(obj => obj.name).filter(objName => objName.search(searchTerm) !== -1);//.join('');
+  //let matchedItem = nameArray.indexOf(nameResult);
+  let indexArray = [];
+  for (let i = 0; i < nameResult.length; i++){
+    indexArray.push(nameArray.indexOf(nameResult[i]));
+  }
+  console.log(nameResult);
+  console.log(indexArray);
+  //console.log(matchedItem);
+  //return matchedItem;
+  return indexArray;
 }
 
 function handleItemSearch(){
@@ -176,7 +176,6 @@ function handleUpdateItem(){
   });
 }
 
-//doc ready function
 function handleShoppingList() {
   renderShoppingList();
   handleNewItemSubmit();

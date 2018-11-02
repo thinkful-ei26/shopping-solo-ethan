@@ -51,16 +51,20 @@ function renderShoppingList(matchedItem) {
     let newFilteredItems = filteredItems.filter(item => !item.checked);
     //console.log(newFilteredItems);
     $('.js-shopping-list').html(generateShoppingItemsString(newFilteredItems));
-  } else if (STORE.searchTerm){
+  } else if (STORE.searchTerm && matchedItem === -1){
+    $('.js-shopping-list').html('');
+    console.log('no match ran');
+  } 
+  else if (STORE.searchTerm){
     let MatchedItemsObject = STORE.items[matchedItem];
-    let MatchedItemsObjectIntoArrray = [];
-    MatchedItemsObjectIntoArrray.push(MatchedItemsObject);
+    let MatchedItemsObjectIntoArray = [];
+    MatchedItemsObjectIntoArray.push(MatchedItemsObject);
     console.log(MatchedItemsObject);
-    $('.js-shopping-list').html(generateShoppingItemsString(MatchedItemsObjectIntoArrray));
-  // } else if (STORE.searchTerm && !matchedItem){
-  //   $('.js-shopping-list').html();
-  }
+    console.log('match ran');
+    $('.js-shopping-list').html(generateShoppingItemsString(MatchedItemsObjectIntoArray));
+  } 
   else {
+    
     $('.js-shopping-list').html(shoppingListItemsString);
   } 
 }
@@ -145,7 +149,7 @@ function searchForMatch(searchTerm){
   let nameResult = STORE.items.map(obj => obj.name).filter(objName => objName.search(searchTerm) !== -1).join();
   let matchedItem = nameArray.indexOf(nameResult);
   //console.log(nameResult);
-  //console.log(matchedItem);
+  console.log(matchedItem);
   return matchedItem;
 
 }

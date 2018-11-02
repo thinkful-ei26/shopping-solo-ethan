@@ -143,10 +143,9 @@ function searchForMatch(searchTerm){
   //console.log('search for match ran');
   let nameArray = STORE.items.map(obj => obj.name);
   let nameResult = STORE.items.map(obj => obj.name).filter(objName => objName.search(searchTerm) !== -1).join();
-  
   let matchedItem = nameArray.indexOf(nameResult);
-  console.log(nameResult);
-  console.log(matchedItem);
+  //console.log(nameResult);
+  //console.log(matchedItem);
   return matchedItem;
 
 }

@@ -9,6 +9,7 @@ const STORE = {
     {name: 'bread', checked: false}
   ],
   hideCompleted: false,
+  searchTerm: null
 };
 
 function generateItemElement(item, itemIndex, template){
@@ -36,19 +37,26 @@ function generateShoppingItemsString(shoppingList) {
   return items.join('');
 }
 
-function renderShoppingList() {
+function renderShoppingList(matchedItem) {
   console.log('`renderShoppingList`');
   const shoppingListItemsString = generateShoppingItemsString(STORE.items);
   let filteredItems = [ ...STORE.items];
   if (STORE.hideCompleted){
     let newFilteredItems = filteredItems.filter(item => !item.checked);
+    console.log(newFilteredItems);
     $('.js-shopping-list').html(generateShoppingItemsString(newFilteredItems));
-  } 
-  // insert that HTML into the DOM
+  } else if (STORE.searchTerm){
+    let MatchedItemsObject = STORE.items[matchedItem];
+    let MatchedItemsObjectIntoArrray = [];
+    MatchedItemsObjectIntoArrray.push(MatchedItemsObject);
+    console.log(MatchedItemsObject);
+    $('.js-shopping-list').html(generateShoppingItemsString(MatchedItemsObjectIntoArrray));
+  }
   else {
     $('.js-shopping-list').html(shoppingListItemsString);
-  }
+  } 
 }
+ 
 
 function addItemToShoppingList (itemName){
   console.log(`Adding "${itemName}" to shopping list`);
@@ -122,6 +130,32 @@ function handleItemToggle(){
   });
 }
 
+function searchForMatch(searchTerm){
+  STORE.searchTerm = searchTerm;
+  //console.log('search for match ran');
+  let nameArray = STORE.items.map(obj => obj.name);
+  let nameResult = STORE.items.map(obj => obj.name).filter(objName => objName === searchTerm).join();
+  let matchedItem = nameArray.indexOf(nameResult);
+  console.log(nameResult);
+  console.log(matchedItem);
+  return matchedItem;
+
+}
+
+function handleItemSearch(){
+  $('#js-shopping-list-search').submit(function (event){
+    event.preventDefault();
+    const searchTerm = $('.js-shopping-search-entry').val();
+    $('.js-shopping-search-entry').val('');
+    const matchedItem = searchForMatch(searchTerm);  
+    renderShoppingList(matchedItem);
+  });
+}
+
+function handleUpdateItem(){
+  
+}
+
 //doc ready function
 function handleShoppingList() {
   renderShoppingList();
@@ -129,6 +163,7 @@ function handleShoppingList() {
   handleItemCheckClicked();
   handleDeleteItemClicked();
   handleItemToggle();
+  handleItemSearch();
 }
 
 $(handleShoppingList);

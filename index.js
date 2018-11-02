@@ -41,15 +41,13 @@ function renderShoppingList() {
   const shoppingListItemsString = generateShoppingItemsString(STORE.items);
   let filteredItems = [ ...STORE.items];
   if (STORE.hideCompleted){
-    console.log('re-render ran');
-    console.log(filteredItems);
     let newFilteredItems = filteredItems.filter(item => !item.checked);
-    console.log(newFilteredItems);
     $('.js-shopping-list').html(generateShoppingItemsString(newFilteredItems));
-    console.log('issue here');
   } 
   // insert that HTML into the DOM
-  else {$('.js-shopping-list').html(shoppingListItemsString);}
+  else {
+    $('.js-shopping-list').html(shoppingListItemsString);
+  }
 }
 
 function addItemToShoppingList (itemName){

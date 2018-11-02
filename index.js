@@ -23,7 +23,12 @@ function generateItemElement(item, itemIndex, template){
       </button>
       <button class="shopping-item-delete js-item-delete">
           <span class="button-label">delete</span>
-      </button>
+      </button><br><br>
+      <form id="js-shopping-item-update">
+        <label for="shopping-list-update">Update this item</label>
+        <input type="text" name="shopping-list-update" class="js-shopping-list-update">
+        <button type="submit">Update</button>
+    </form>
     </div>
   </li>`;
 }
@@ -51,6 +56,8 @@ function renderShoppingList(matchedItem) {
     MatchedItemsObjectIntoArrray.push(MatchedItemsObject);
     console.log(MatchedItemsObject);
     $('.js-shopping-list').html(generateShoppingItemsString(MatchedItemsObjectIntoArrray));
+  // } else if (STORE.searchTerm && !matchedItem){
+  //   $('.js-shopping-list').html();
   }
   else {
     $('.js-shopping-list').html(shoppingListItemsString);
@@ -153,7 +160,7 @@ function handleItemSearch(){
 }
 
 function handleUpdateItem(){
-  
+  $('#js-shopping-item-update')
 }
 
 //doc ready function

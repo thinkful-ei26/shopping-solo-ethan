@@ -6,7 +6,8 @@ const STORE = {
     {name: 'apples', checked: false},
     {name: 'oranges', checked: false},
     {name: 'milk', checked: true},
-    {name: 'bread', checked: false}
+    {name: 'bread', checked: false},
+    {name: 'apricot', checked: false}
   ],
   hideCompleted: false,
   searchTerm: null
@@ -43,12 +44,12 @@ function generateShoppingItemsString(shoppingList) {
 }
 
 function renderShoppingList(matchedItem) {
-  console.log('`renderShoppingList`');
+  //console.log('`renderShoppingList`');
   const shoppingListItemsString = generateShoppingItemsString(STORE.items);
   let filteredItems = [ ...STORE.items];
   if (STORE.hideCompleted){
     let newFilteredItems = filteredItems.filter(item => !item.checked);
-    console.log(newFilteredItems);
+    //console.log(newFilteredItems);
     $('.js-shopping-list').html(generateShoppingItemsString(newFilteredItems));
   } else if (STORE.searchTerm){
     let MatchedItemsObject = STORE.items[matchedItem];
@@ -101,7 +102,7 @@ function handleItemCheckClicked() {
   $('.js-shopping-list').on('click', '.js-item-toggle', function(event){
     //console.log('`handleItemCheckClicked` ran');
     const itemIndex = getItemIndexFromElement(event.currentTarget);
-    console.log(itemIndex);
+    //console.log(itemIndex);
     toggleCheckedForListItem(itemIndex);
     renderShoppingList();
   });
@@ -118,7 +119,7 @@ function handleDeleteItemClicked() {
   $('.js-shopping-list').on('click', '.js-item-delete', function(event){
     //console.log('`handleDeleteItemClicked` ran');
     const itemIndex = getItemIndexFromElement(event.currentTarget);
-    console.log(itemIndex);
+    //console.log(itemIndex);
     deleteListItemFromStore(itemIndex);
     renderShoppingList();
   }); 
@@ -126,7 +127,7 @@ function handleDeleteItemClicked() {
 
 function toggleHideItems(){
   STORE.hideCompleted = !STORE.hideCompleted;
-  console.log('toggler ran');
+  //console.log('toggler ran');
 }
 
 function handleItemToggle(){
@@ -141,7 +142,8 @@ function searchForMatch(searchTerm){
   STORE.searchTerm = searchTerm;
   //console.log('search for match ran');
   let nameArray = STORE.items.map(obj => obj.name);
-  let nameResult = STORE.items.map(obj => obj.name).filter(objName => objName === searchTerm).join();
+  let nameResult = STORE.items.map(obj => obj.name).filter(objName => objName.search(searchTerm) !== -1).join();
+  
   let matchedItem = nameArray.indexOf(nameResult);
   console.log(nameResult);
   console.log(matchedItem);

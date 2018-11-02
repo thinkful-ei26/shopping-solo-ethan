@@ -41,17 +41,20 @@ function renderShoppingList() {
   const shoppingListItemsString = generateShoppingItemsString(STORE.items);
   let filteredItems = [ ...STORE.items];
   if (STORE.hideCompleted){
-    filteredItems.filter(item => !item.checked);
-
-  }
-  //const shoppingListItemsString = '<li>apples</li>';
+    console.log('re-render ran');
+    console.log(filteredItems);
+    let newFilteredItems = filteredItems.filter(item => !item.checked);
+    console.log(newFilteredItems);
+    $('.js-shopping-list').html(generateShoppingItemsString(newFilteredItems));
+    console.log('issue here');
+  } 
   // insert that HTML into the DOM
-  $('.js-shopping-list').html(shoppingListItemsString);
+  else {$('.js-shopping-list').html(shoppingListItemsString);}
 }
 
 function addItemToShoppingList (itemName){
   console.log(`Adding "${itemName}" to shopping list`);
-  STORE.push({name: itemName, checked: false});
+  STORE.items.push({name: itemName, checked: false});
 }
 
 function handleNewItemSubmit() {
@@ -69,7 +72,7 @@ function handleNewItemSubmit() {
 
 function toggleCheckedForListItem(itemIndex) {
   console.log('Toggling checked property for item at index ' + itemIndex);
-  STORE[itemIndex].checked = !STORE[itemIndex].checked;
+  STORE.items[itemIndex].checked = !STORE.items[itemIndex].checked;
 }
 
 function getItemIndexFromElement(item) {
@@ -93,7 +96,7 @@ function handleItemCheckClicked() {
 
 function deleteListItemFromStore (itemIndex){
   console.log('Deleting item at index ' + itemIndex);
-  STORE.splice(itemIndex, 1);
+  STORE.items.splice(itemIndex, 1);
 }
 
 function handleDeleteItemClicked() {
@@ -110,10 +113,12 @@ function handleDeleteItemClicked() {
 
 function toggleHideItems(){
   STORE.hideCompleted = !STORE.hideCompleted;
+  console.log('toggler ran');
 }
 
 function handleItemToggle(){
-  $('checkbox').click(function (event){
+  $('#js-completed-checkbox-form').click(function(){
+    console.log('checkbox listener ran');
     toggleHideItems();
     renderShoppingList();
   });

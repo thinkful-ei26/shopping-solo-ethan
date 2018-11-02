@@ -1,12 +1,15 @@
 /*eslint-env jquery*/
 'use strict';
 
-const STORE = [
-  {name: 'apples', checked: false},
-  {name: 'oranges', checked: false},
-  {name: 'milk', checked: true},
-  {name: 'bread', checked: false}
-];
+const STORE = {
+  items: [
+    {name: 'apples', checked: false},
+    {name: 'oranges', checked: false},
+    {name: 'milk', checked: true},
+    {name: 'bread', checked: false}
+  ],
+  hideCompleted: false,
+};
 
 function generateItemElement(item, itemIndex, template){
   return `
@@ -35,7 +38,12 @@ function generateShoppingItemsString(shoppingList) {
 
 function renderShoppingList() {
   console.log('`renderShoppingList`');
-  const shoppingListItemsString = generateShoppingItemsString(STORE);
+  const shoppingListItemsString = generateShoppingItemsString(STORE.items);
+  let filteredItems = [ ...STORE.items];
+  if (STORE.hideCompleted){
+    filteredItems.filter(item => !item.checked);
+
+  }
   //const shoppingListItemsString = '<li>apples</li>';
   // insert that HTML into the DOM
   $('.js-shopping-list').html(shoppingListItemsString);
@@ -81,7 +89,6 @@ function handleItemCheckClicked() {
     toggleCheckedForListItem(itemIndex);
     renderShoppingList();
   });
-
 }
 
 function deleteListItemFromStore (itemIndex){
@@ -101,12 +108,24 @@ function handleDeleteItemClicked() {
   }); 
 }
 
+function toggleHideItems(){
+  STORE.hideCompleted = !STORE.hideCompleted;
+}
+
+function handleItemToggle(){
+  $('checkbox').click(function (event){
+    toggleHideItems();
+    renderShoppingList();
+  });
+}
+
 //doc ready function
 function handleShoppingList() {
   renderShoppingList();
   handleNewItemSubmit();
   handleItemCheckClicked();
   handleDeleteItemClicked();
+  handleItemToggle();
 }
 
 $(handleShoppingList);

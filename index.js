@@ -3,11 +3,11 @@
 
 const STORE = {
   items: [
-    {name: 'apples', checked: false},
-    {name: 'oranges', checked: false},
-    {name: 'milk', checked: true},
-    {name: 'bread', checked: false},
-    {name: 'apricot', checked: false}
+    {name: 'apples', checked: false, searched: false},
+    {name: 'oranges', checked: false, searched: false},
+    {name: 'milk', checked: true, searched: false},
+    {name: 'bread', checked: false, searched: false},
+    {name: 'apricot', checked: false, searched: false}
   ],
   hideCompleted: false,
   searchTerm: null
@@ -49,19 +49,21 @@ function renderShoppingList(matchedItem) {
   let filteredItems = [ ...STORE.items];
   if (STORE.hideCompleted){
     let newFilteredItems = filteredItems.filter(item => !item.checked);
-    //console.log(newFilteredItems);
+    console.log(newFilteredItems);
     $('.js-shopping-list').html(generateShoppingItemsString(newFilteredItems));
   } else if (STORE.searchTerm && matchedItem === -1){
     $('.js-shopping-list').html('');
     console.log('no match ran');
   } 
   else if (STORE.searchTerm){
-    let MatchedItemsObject = STORE.items[matchedItem];
-    let MatchedItemsObjectIntoArray = [];
-    MatchedItemsObjectIntoArray.push(MatchedItemsObject);
-    console.log(MatchedItemsObject);
-    console.log('match ran');
-    $('.js-shopping-list').html(generateShoppingItemsString(MatchedItemsObjectIntoArray));
+    let searchedItems = STORE.items.filter(item => item.searched === true);
+    console.log(searchedItems);
+    // let MatchedItemsObject = STORE.items[matchedItem];
+    // let MatchedItemsObjectIntoArray = [];
+    // MatchedItemsObjectIntoArray.push(MatchedItemsObject);
+    // console.log(MatchedItemsObject);
+    // console.log('match ran');
+    $('.js-shopping-list').html(generateShoppingItemsString(searchedItems));
   } 
   else {
     
@@ -166,6 +168,30 @@ function searchForMatch(searchTerm){
     }
   }
   console.log(indexArrayOfSearchedItems);
+  //console.log(STORE.items[indexArrayOfSearchedItems[1]]);
+  
+  for (let i = 0; i < indexArrayOfSearchedItems.length; i++){
+    STORE.items[indexArrayOfSearchedItems[i]].searched = true;
+    //console.log(indexArrayOfSearchedItems[i]); 
+  }
+
+  for (let i = 0; i < STORE.items.length; i++){
+    if (indexArrayOfSearchedItems.includes(STORE.items[STORE.i])){
+      STORE.items[STORE.items[i]].searched = false;
+    }
+  }
+  
+  
+  // STORE.items[0].searched = true;
+  // for (let i = 0; i < STORE.items.length; i++){
+  //   if (STORE.items.indexOf[i] === indexArrayOfSearchedItems[0] || STORE.items[i] === indexArrayOfSearchedItems[1]) {
+  //     console.log(STORE.items[i]);
+  //     STORE.items[i].searched = true;
+  //   }
+  // }
+  console.log(STORE);
+
+
   // let indexArrayOfSearchedItems = STORE.items.map(item => Object.values(item)[0]).filter(element => searchedItems.includes(element));
   // console.log(indexArrayOfSearchedItems);
   // let nameArray = STORE.items.map(obj => obj.name);

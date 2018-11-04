@@ -144,13 +144,36 @@ function handleItemToggle(){
 
 function searchForMatch(searchTerm){
   STORE.searchTerm = searchTerm;
-  //console.log('search for match ran');
-  let nameArray = STORE.items.map(obj => obj.name);
-  let nameResult = STORE.items.map(obj => obj.name).filter(objName => objName.search(searchTerm) !== -1).join();
-  let matchedItem = nameArray.indexOf(nameResult);
+  console.log('search for match ran');
+  console.log(STORE.searchTerm);
+  // console.log(STORE.items[0].name);
+  // console.log(Object.values(STORE.items[0]));
+  // let valueArray = [];
+  // for (let i = 0; i < STORE.items.length; i++){
+  //   valueArray.push(Object.values(STORE.items[i]));
+  // }
+  // console.log(valueArray);
+  // let namesFromArray = valueArray.map(item => item[0]);
+  // console.log(namesFromArray);
+  let valueMap = STORE.items.map(item => Object.values(item)[0]);
+  console.log(valueMap);
+  let searchedItems = valueMap.filter(item => item.search(searchTerm) !== -1);
+  console.log(searchedItems);
+  let indexArrayOfSearchedItems = [];
+  for (let i = 0; i < searchedItems.length; i++){
+    if (searchedItems[i] === valueMap[0] || searchedItems[i] === valueMap[1] || searchedItems[i] === valueMap[2] || searchedItems[i] === valueMap[3] || searchedItems[i] === valueMap[4]) {
+      indexArrayOfSearchedItems.push((valueMap.indexOf(searchedItems[i])));
+    }
+  }
+  console.log(indexArrayOfSearchedItems);
+  // let indexArrayOfSearchedItems = STORE.items.map(item => Object.values(item)[0]).filter(element => searchedItems.includes(element));
+  // console.log(indexArrayOfSearchedItems);
+  // let nameArray = STORE.items.map(obj => obj.name);
+  // let nameResult = STORE.items.map(obj => obj.name).filter(objName => objName.search(searchTerm) !== -1).join();
+  // let matchedItem = nameArray.indexOf(nameResult);
   //console.log(nameResult);
   //console.log(matchedItem);
-  return matchedItem;
+  //return matchedItem;
 
 }
 

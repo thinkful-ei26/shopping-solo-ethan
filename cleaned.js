@@ -36,44 +36,31 @@ function generateItemElement(item, itemIndex, template){
 
 
 function generateShoppingItemsString(shoppingList) {
-  console.log('Generating shopping list element');
   const items = shoppingList.map((item, index) => generateItemElement(item, index));
-
-
   return items.join('');
 }
 
 function renderShoppingList() {
-  //console.log('`renderShoppingList`');
-  const shoppingListItemsString = generateShoppingItemsString(STORE.items);
   if (STORE.searchTerm && STORE.hideCompleted){
-    let searchedAndFilteredItems = STORE.items.filter(item => item.searched && !item.checked);
-    // console.log(searchedAndFilteredItems);
-    $('.js-shopping-list').html(generateShoppingItemsString(searchedAndFilteredItems));
+    STORE.items = STORE.items.filter(item => item.searched && !item.checked);
   } else if (STORE.hideCompleted){
-    let newFilteredItems = STORE.items.filter(item => !item.checked);
-    // console.log(newFilteredItems);
-    $('.js-shopping-list').html(generateShoppingItemsString(newFilteredItems));
+    STORE.items = STORE.items.filter(item => !item.checked);
   } else if (STORE.searchTerm){
-    let searchedItems = STORE.items.filter(item => item.searched);
-    $('.js-shopping-list').html(generateShoppingItemsString(searchedItems));
-  } else {
-    $('.js-shopping-list').html(shoppingListItemsString);
+    STORE.items = STORE.items.filter(item => item.searched);
   } 
+  let shoppingListItemsString = generateShoppingItemsString(STORE.items);
+  $('.js-shopping-list').html(shoppingListItemsString); 
 }
  
 
 function addItemToShoppingList (itemName){
-  console.log(`Adding "${itemName}" to shopping list`);
   STORE.items.push({name: itemName, checked: false});
 }
 
 function handleNewItemSubmit() {
-  // this function will be responsible for when users add a new shopping list item
   $('#js-shopping-list-form').submit(function(event){
     event.preventDefault();
     const newItemName = $('.js-shopping-list-entry').val();
-    console.log(newItemName);
     $('.js-shopping-list-entry').val('');
     addItemToShoppingList(newItemName);
     renderShoppingList();
@@ -82,7 +69,6 @@ function handleNewItemSubmit() {
 }
 
 function toggleCheckedForListItem(itemIndex) {
-  console.log('Toggling checked property for item at index ' + itemIndex);
   STORE.items[itemIndex].checked = !STORE.items[itemIndex].checked;
 }
 
@@ -94,29 +80,20 @@ function getItemIndexFromElement(item) {
 }
 
 function handleItemCheckClicked() {
-  // this function will be responsible for when users click the "check" button on
-  // a shopping list item.
   $('.js-shopping-list').on('click', '.js-item-toggle', function(event){
-    //console.log('`handleItemCheckClicked` ran');
     const itemIndex = getItemIndexFromElement(event.currentTarget);
-    //console.log(itemIndex);
     toggleCheckedForListItem(itemIndex);
     renderShoppingList();
   });
 }
 
 function deleteListItemFromStore (itemIndex){
-  console.log('Deleting item at index ' + itemIndex);
   STORE.items.splice(itemIndex, 1);
 }
 
 function handleDeleteItemClicked() {
-  // this function will be responsible for when users want to delete a shopping list
-  // item
   $('.js-shopping-list').on('click', '.js-item-delete', function(event){
-    //console.log('`handleDeleteItemClicked` ran');
     const itemIndex = getItemIndexFromElement(event.currentTarget);
-    //console.log(itemIndex);
     deleteListItemFromStore(itemIndex);
     renderShoppingList();
   }); 
@@ -124,12 +101,10 @@ function handleDeleteItemClicked() {
 
 function toggleHideItems(){
   STORE.hideCompleted = !STORE.hideCompleted;
-  //console.log('toggler ran');
 }
 
 function handleItemToggle(){
   $('#js-completed-checkbox-form').click(function(){
-    console.log('checkbox listener ran');
     toggleHideItems();
     renderShoppingList();
   });
@@ -137,16 +112,7 @@ function handleItemToggle(){
 
 function searchForMatch(searchTerm){
   STORE.searchTerm = searchTerm;
-  // let valueMap = STORE.items.map(item => Object.values(item)[0]);
   let searchedItemIndices = STORE.items.filter(item => item.name.search(searchTerm) !== -1).map(item => STORE.items.indexOf(item));
-  // STORE.items.forEach(function(i){
-  //   if (searchedItems.includes(STORE.items.indexOf(STORE.items[i]))){
-  //     STORE.items[i].searched = true;
-  //   } else {
-  //     STORE.items[i].searched = false;
-  //   }
-  // });
-  
   for (let i = 0; i < STORE.items.length; i++){
     if (searchedItemIndices.includes(STORE.items.indexOf(STORE.items[i]))){
       STORE.items[i].searched = true;
@@ -154,64 +120,6 @@ function searchForMatch(searchTerm){
       STORE.items[i].searched = false;
     }
   }
-  //console.log('search for match ran');
-  //console.log(STORE.searchTerm);
-  // console.log(STORE.items[0].name);
-  // console.log(Object.values(STORE.items[0]));
-  // let valueArray = [];
-  // for (let i = 0; i < STORE.items.length; i++){
-  //   valueArray.push(Object.values(STORE.items[i]));
-  // }
-  // console.log(valueArray);
-  // let namesFromArray = valueArray.map(item => item[0]);
-  // console.log(namesFromArray);
-  // let valueMap = STORE.items.map(item => Object.values(item)[0]);
-  // console.log(valueMap);
-  // let searchedItems = valueMap.filter(item => item.search(searchTerm) !== -1).map(item => valueMap.indexOf(item));
-  //console.log(searchedItems);
-  // let indexArrayOfSearchedItems = [];
-  // for (let i = 0; i < searchedItems.length; i++){
-  //   if (searchedItems[i] === valueMap[0] || searchedItems[i] === valueMap[1] || searchedItems[i] === valueMap[2] || searchedItems[i] === valueMap[3] || searchedItems[i] === valueMap[4]) {
-  //     indexArrayOfSearchedItems.push((valueMap.indexOf(searchedItems[i])));
-  //   }
-  // }
-  // console.log(indexArrayOfSearchedItems);
-  //console.log(STORE.items[indexArrayOfSearchedItems[1]]);
-  
-  // for (let i = 0; i < indexArrayOfSearchedItems.length; i++){
-  //   STORE.items[indexArrayOfSearchedItems[i]].searched = true;
-  //   //console.log(indexArrayOfSearchedItems[i]); 
-  // }
-
-  // for (let i = 0; i < STORE.items.length; i++){
-  //   if (searchedItems.includes(STORE.items.indexOf(STORE.items[i]))){
-  //     STORE.items[i].searched = true;
-  //   } else {
-  //     //console.log(STORE.items[i]);
-  //     STORE.items[i].searched = false;
-  //   }
-  // }
-  
-  
-  // STORE.items[0].searched = true;
-  // for (let i = 0; i < STORE.items.length; i++){
-  //   if (STORE.items.indexOf[i] === indexArrayOfSearchedItems[0] || STORE.items[i] === indexArrayOfSearchedItems[1]) {
-  //     console.log(STORE.items[i]);
-  //     STORE.items[i].searched = true;
-  //   }
-  // }
-  // console.log(STORE);
-
-
-  // let indexArrayOfSearchedItems = STORE.items.map(item => Object.values(item)[0]).filter(element => searchedItems.includes(element));
-  // console.log(indexArrayOfSearchedItems);
-  // let nameArray = STORE.items.map(obj => obj.name);
-  // let nameResult = STORE.items.map(obj => obj.name).filter(objName => objName.search(searchTerm) !== -1).join();
-  // let matchedItem = nameArray.indexOf(nameResult);
-  //console.log(nameResult);
-  //console.log(matchedItem);
-  //return matchedItem;
-
 }
 
 function handleItemSearch(){
@@ -231,19 +139,15 @@ function clearSearchStatus(){
 
 function handleClearItemSearch(){
   $('#js-shopping-list-clear').click(function (){
-    // console.log('clear ran');
     clearSearchStatus();
     renderShoppingList();
   });
 }
 
 function updateItemInPlace(itemIndex, updatedTerm){
-  // console.log(itemIndex);
   STORE.items[itemIndex].name = updatedTerm;
   STORE.items[itemIndex].checked = false;
-  // console.log(STORE.items[itemIndex]);
 }
-
 
 function handleUpdateItem(){
   $('ul').on('submit', '#js-shopping-item-update', function (event){
@@ -256,7 +160,6 @@ function handleUpdateItem(){
   });
 }
 
-//doc ready function
 function handleShoppingList() {
   renderShoppingList();
   handleNewItemSubmit();

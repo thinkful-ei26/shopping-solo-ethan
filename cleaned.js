@@ -116,23 +116,16 @@ function handleItemToggle(){
 
 function searchForMatch(searchTerm){
   STORE.searchTerm = searchTerm;
-  let searchedItemIndices = STORE.items.filter(item => item.name.search(searchTerm) !== -1).map(item => STORE.items.indexOf(item));
-  for (let i = 0; i < STORE.items.length; i++){
-    if (searchedItemIndices.includes(STORE.items.indexOf(STORE.items[i]))){
-      STORE.items[i].searched = true;
-    } else {
-      STORE.items[i].searched = false;
-    }
-  }
+  STORE.items.map(item => item.searched = false);
+  STORE.items.filter(item => item.name.search(searchTerm) !== -1).map(item => item.searched = true);
 }
 
 function handleItemSearch(){
   $('#js-shopping-list-search').submit(function (event){
     event.preventDefault();
     const searchTerm = $('.js-shopping-search-entry').val();
-    $('.js-shopping-search-entry').val('');
-    const matchedItem = searchForMatch(searchTerm);  
-    renderShoppingList(matchedItem);
+    searchForMatch(searchTerm);  
+    renderShoppingList();
   });
 }
 
@@ -145,6 +138,7 @@ function handleClearItemSearch(){
   $('#js-shopping-list-clear').click(function (){
     clearSearchStatus();
     renderShoppingList();
+    $('.js-shopping-search-entry').val('');
   });
 }
 

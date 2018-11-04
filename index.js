@@ -170,14 +170,17 @@ function searchForMatch(searchTerm){
   console.log(indexArrayOfSearchedItems);
   //console.log(STORE.items[indexArrayOfSearchedItems[1]]);
   
-  for (let i = 0; i < indexArrayOfSearchedItems.length; i++){
-    STORE.items[indexArrayOfSearchedItems[i]].searched = true;
-    //console.log(indexArrayOfSearchedItems[i]); 
-  }
+  // for (let i = 0; i < indexArrayOfSearchedItems.length; i++){
+  //   STORE.items[indexArrayOfSearchedItems[i]].searched = true;
+  //   //console.log(indexArrayOfSearchedItems[i]); 
+  // }
 
   for (let i = 0; i < STORE.items.length; i++){
-    if (indexArrayOfSearchedItems.includes(STORE.items[STORE.i])){
-      STORE.items[STORE.items[i]].searched = false;
+    if (indexArrayOfSearchedItems.includes(STORE.items.indexOf(STORE.items[i]))){
+      STORE.items[i].searched = true;
+    } else {
+      console.log(STORE.items[i]);
+      STORE.items[i].searched = false;
     }
   }
   

@@ -43,30 +43,21 @@ function generateShoppingItemsString(shoppingList) {
   return items.join('');
 }
 
-function renderShoppingList(matchedItem) {
+function renderShoppingList() {
   //console.log('`renderShoppingList`');
   const shoppingListItemsString = generateShoppingItemsString(STORE.items);
-  let filteredItems = [ ...STORE.items];
-  if (STORE.hideCompleted){
-    let newFilteredItems = filteredItems.filter(item => !item.checked);
-    console.log(newFilteredItems);
+  if (STORE.searchTerm && STORE.hideCompleted){
+    let searchedAndFilteredItems = STORE.items.filter(item => item.searched && !item.checked);
+    // console.log(searchedAndFilteredItems);
+    $('.js-shopping-list').html(generateShoppingItemsString(searchedAndFilteredItems));
+  } else if (STORE.hideCompleted){
+    let newFilteredItems = STORE.items.filter(item => !item.checked);
+    // console.log(newFilteredItems);
     $('.js-shopping-list').html(generateShoppingItemsString(newFilteredItems));
-  } else if (STORE.searchTerm && matchedItem === -1){
-    $('.js-shopping-list').html('');
-    console.log('no match ran');
-  } 
-  else if (STORE.searchTerm){
-    let searchedItems = STORE.items.filter(item => item.searched === true);
-    console.log(searchedItems);
-    // let MatchedItemsObject = STORE.items[matchedItem];
-    // let MatchedItemsObjectIntoArray = [];
-    // MatchedItemsObjectIntoArray.push(MatchedItemsObject);
-    // console.log(MatchedItemsObject);
-    // console.log('match ran');
+  } else if (STORE.searchTerm){
+    let searchedItems = STORE.items.filter(item => item.searched);
     $('.js-shopping-list').html(generateShoppingItemsString(searchedItems));
-  } 
-  else {
-    
+  } else {
     $('.js-shopping-list').html(shoppingListItemsString);
   } 
 }
@@ -146,6 +137,23 @@ function handleItemToggle(){
 
 function searchForMatch(searchTerm){
   STORE.searchTerm = searchTerm;
+  let valueMap = STORE.items.map(item => Object.values(item)[0]);
+  let searchedItems = valueMap.filter(item => item.search(searchTerm) !== -1).map(item => valueMap.indexOf(item));
+  // STORE.items.forEach(function(i){
+  //   if (searchedItems.includes(STORE.items.indexOf(STORE.items[i]))){
+  //     STORE.items[i].searched = true;
+  //   } else {
+  //     STORE.items[i].searched = false;
+  //   }
+  // });
+  
+  for (let i = 0; i < STORE.items.length; i++){
+    if (searchedItems.includes(STORE.items.indexOf(STORE.items[i]))){
+      STORE.items[i].searched = true;
+    } else {
+      STORE.items[i].searched = false;
+    }
+  }
   //console.log('search for match ran');
   //console.log(STORE.searchTerm);
   // console.log(STORE.items[0].name);
@@ -157,16 +165,16 @@ function searchForMatch(searchTerm){
   // console.log(valueArray);
   // let namesFromArray = valueArray.map(item => item[0]);
   // console.log(namesFromArray);
-  let valueMap = STORE.items.map(item => Object.values(item)[0]);
+  // let valueMap = STORE.items.map(item => Object.values(item)[0]);
   // console.log(valueMap);
-  let searchedItems = valueMap.filter(item => item.search(searchTerm) !== -1);
-  // console.log(searchedItems);
-  let indexArrayOfSearchedItems = [];
-  for (let i = 0; i < searchedItems.length; i++){
-    if (searchedItems[i] === valueMap[0] || searchedItems[i] === valueMap[1] || searchedItems[i] === valueMap[2] || searchedItems[i] === valueMap[3] || searchedItems[i] === valueMap[4]) {
-      indexArrayOfSearchedItems.push((valueMap.indexOf(searchedItems[i])));
-    }
-  }
+  // let searchedItems = valueMap.filter(item => item.search(searchTerm) !== -1).map(item => valueMap.indexOf(item));
+  //console.log(searchedItems);
+  // let indexArrayOfSearchedItems = [];
+  // for (let i = 0; i < searchedItems.length; i++){
+  //   if (searchedItems[i] === valueMap[0] || searchedItems[i] === valueMap[1] || searchedItems[i] === valueMap[2] || searchedItems[i] === valueMap[3] || searchedItems[i] === valueMap[4]) {
+  //     indexArrayOfSearchedItems.push((valueMap.indexOf(searchedItems[i])));
+  //   }
+  // }
   // console.log(indexArrayOfSearchedItems);
   //console.log(STORE.items[indexArrayOfSearchedItems[1]]);
   
@@ -175,14 +183,14 @@ function searchForMatch(searchTerm){
   //   //console.log(indexArrayOfSearchedItems[i]); 
   // }
 
-  for (let i = 0; i < STORE.items.length; i++){
-    if (indexArrayOfSearchedItems.includes(STORE.items.indexOf(STORE.items[i]))){
-      STORE.items[i].searched = true;
-    } else {
-      //console.log(STORE.items[i]);
-      STORE.items[i].searched = false;
-    }
-  }
+  // for (let i = 0; i < STORE.items.length; i++){
+  //   if (searchedItems.includes(STORE.items.indexOf(STORE.items[i]))){
+  //     STORE.items[i].searched = true;
+  //   } else {
+  //     //console.log(STORE.items[i]);
+  //     STORE.items[i].searched = false;
+  //   }
+  // }
   
   
   // STORE.items[0].searched = true;
@@ -192,7 +200,7 @@ function searchForMatch(searchTerm){
   //     STORE.items[i].searched = true;
   //   }
   // }
-  console.log(STORE);
+  // console.log(STORE);
 
 
   // let indexArrayOfSearchedItems = STORE.items.map(item => Object.values(item)[0]).filter(element => searchedItems.includes(element));
@@ -216,10 +224,24 @@ function handleItemSearch(){
   });
 }
 
+function clearSearchStatus(){
+  STORE.searchTerm = null;
+  STORE.items.map(item => item.searched = false);
+}
+
+function handleClearItemSearch(){
+  $('#js-shopping-list-clear').click(function (){
+    // console.log('clear ran');
+    clearSearchStatus();
+    renderShoppingList();
+  });
+}
+
 function updateItemInPlace(itemIndex, updatedTerm){
-  console.log(itemIndex);
+  // console.log(itemIndex);
   STORE.items[itemIndex].name = updatedTerm;
-  console.log(STORE.items[itemIndex]);
+  STORE.items[itemIndex].checked = false;
+  // console.log(STORE.items[itemIndex]);
 }
 
 
@@ -242,6 +264,7 @@ function handleShoppingList() {
   handleDeleteItemClicked();
   handleItemToggle();
   handleItemSearch();
+  handleClearItemSearch();
   handleUpdateItem();
 }
 

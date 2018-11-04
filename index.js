@@ -149,7 +149,7 @@ function searchForMatch(searchTerm){
   let nameResult = STORE.items.map(obj => obj.name).filter(objName => objName.search(searchTerm) !== -1).join();
   let matchedItem = nameArray.indexOf(nameResult);
   //console.log(nameResult);
-  console.log(matchedItem);
+  //console.log(matchedItem);
   return matchedItem;
 
 }

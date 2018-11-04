@@ -41,15 +41,19 @@ function generateShoppingItemsString(shoppingList) {
 }
 
 function renderShoppingList() {
+  const shoppingListItemsString = generateShoppingItemsString(STORE.items);
   if (STORE.searchTerm && STORE.hideCompleted){
-    STORE.items = STORE.items.filter(item => item.searched && !item.checked);
+    let searchedAndFilteredItems = STORE.items.filter(item => item.searched && !item.checked);
+    $('.js-shopping-list').html(generateShoppingItemsString(searchedAndFilteredItems));
   } else if (STORE.hideCompleted){
-    STORE.items = STORE.items.filter(item => !item.checked);
+    let newFilteredItems = STORE.items.filter(item => !item.checked);
+    $('.js-shopping-list').html(generateShoppingItemsString(newFilteredItems));
   } else if (STORE.searchTerm){
-    STORE.items = STORE.items.filter(item => item.searched);
+    let searchedItems = STORE.items.filter(item => item.searched);
+    $('.js-shopping-list').html(generateShoppingItemsString(searchedItems));
+  } else {
+    $('.js-shopping-list').html(shoppingListItemsString);
   } 
-  let shoppingListItemsString = generateShoppingItemsString(STORE.items);
-  $('.js-shopping-list').html(shoppingListItemsString); 
 }
  
 

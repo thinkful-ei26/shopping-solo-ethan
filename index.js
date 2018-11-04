@@ -146,8 +146,8 @@ function handleItemToggle(){
 
 function searchForMatch(searchTerm){
   STORE.searchTerm = searchTerm;
-  console.log('search for match ran');
-  console.log(STORE.searchTerm);
+  //console.log('search for match ran');
+  //console.log(STORE.searchTerm);
   // console.log(STORE.items[0].name);
   // console.log(Object.values(STORE.items[0]));
   // let valueArray = [];
@@ -158,16 +158,16 @@ function searchForMatch(searchTerm){
   // let namesFromArray = valueArray.map(item => item[0]);
   // console.log(namesFromArray);
   let valueMap = STORE.items.map(item => Object.values(item)[0]);
-  console.log(valueMap);
+  // console.log(valueMap);
   let searchedItems = valueMap.filter(item => item.search(searchTerm) !== -1);
-  console.log(searchedItems);
+  // console.log(searchedItems);
   let indexArrayOfSearchedItems = [];
   for (let i = 0; i < searchedItems.length; i++){
     if (searchedItems[i] === valueMap[0] || searchedItems[i] === valueMap[1] || searchedItems[i] === valueMap[2] || searchedItems[i] === valueMap[3] || searchedItems[i] === valueMap[4]) {
       indexArrayOfSearchedItems.push((valueMap.indexOf(searchedItems[i])));
     }
   }
-  console.log(indexArrayOfSearchedItems);
+  // console.log(indexArrayOfSearchedItems);
   //console.log(STORE.items[indexArrayOfSearchedItems[1]]);
   
   // for (let i = 0; i < indexArrayOfSearchedItems.length; i++){
@@ -179,7 +179,7 @@ function searchForMatch(searchTerm){
     if (indexArrayOfSearchedItems.includes(STORE.items.indexOf(STORE.items[i]))){
       STORE.items[i].searched = true;
     } else {
-      console.log(STORE.items[i]);
+      //console.log(STORE.items[i]);
       STORE.items[i].searched = false;
     }
   }
@@ -216,13 +216,19 @@ function handleItemSearch(){
   });
 }
 
+function updateItemInPlace(itemIndex, updatedTerm){
+  console.log(itemIndex);
+  STORE.items[itemIndex].name = updatedTerm;
+  console.log(STORE.items[itemIndex]);
+}
+
+
 function handleUpdateItem(){
   $('ul').on('submit', '#js-shopping-item-update', function (event){
     event.preventDefault();
     const itemIndex = getItemIndexFromElement($(this));
     const updatedTerm = $(this).find('.js-shopping-list-update').val();
-    deleteListItemFromStore(itemIndex);
-    addItemToShoppingList(updatedTerm);
+    updateItemInPlace(itemIndex, updatedTerm);
     $('.js-shopping-list-update').val('');
     renderShoppingList();
   });
